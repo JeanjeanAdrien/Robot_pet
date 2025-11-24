@@ -29,6 +29,17 @@ brain.on('blink', () => view.blink());
 // Brain -> Movement
 brain.on('wander', () => movementController.setRandomTarget());
 
+// Movement -> Brain (Drag events)
+movementController.onDragStart = () => {
+    brain.setMood('carried');
+    brain.emit('say', "Whee! 🎈");
+};
+
+movementController.onDragEnd = () => {
+    brain.setMood('neutral');
+    brain.emit('say', "Merci!");
+};
+
 // View Interactions -> Brain
 view.bindEvents({
     onClick: () => brain.handleInteraction()

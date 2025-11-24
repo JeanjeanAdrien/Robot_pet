@@ -33,6 +33,12 @@ export class PetView {
                 mouth.style.height = '20px';
                 mouth.style.width = '20px';
                 break;
+            case 'carried':
+                // Cute surprised/excited face
+                mouth.style.borderRadius = '50%';
+                mouth.style.height = '12px';
+                mouth.style.width = '12px';
+                break;
         }
     }
 
