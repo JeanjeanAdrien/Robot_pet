@@ -2,9 +2,7 @@
 const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const path = require('path');
 
-
 let petWindow;
-
 
 function createPetWindow() {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -23,30 +21,26 @@ function createPetWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            nodeIntegration: false
+            nodeIntegration: false,
+            webSecurity: false // Allow loading local modules
         }
     });
 
-
     petWindow.setIgnoreMouseEvents(true, { forward: true }); // Default to click-through
     petWindow.loadFile('index.html');
-
 
     petWindow.on('closed', () => {
         petWindow = null;
     });
 }
 
-
 app.whenReady().then(() => {
     createPetWindow();
-
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createPetWindow();
     });
 });
-
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
@@ -58,7 +52,6 @@ ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
     win.setIgnoreMouseEvents(ignore, options);
 });
 
-
 // Exemple très simple d'"événements d'environnement" (heure locale)
 setInterval(() => {
     if (!petWindow) return;
@@ -66,7 +59,6 @@ setInterval(() => {
     let envState = 'day';
     if (hour >= 22 || hour < 6) envState = 'night';
     else if (hour >= 18) envState = 'evening';
-
 
     petWindow.webContents.send('env-update', { hour, envState });
 }, 10000);

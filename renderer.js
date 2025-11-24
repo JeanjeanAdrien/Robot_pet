@@ -4,15 +4,20 @@
 
 import { PetBrain } from './js/PetBrain.js';
 import { PetView } from './js/PetView.js';
-import { PetPhysics } from './js/PetPhysics.js';
+import { EyeController } from './js/controllers/EyeController.js';
+import { MovementController } from './js/controllers/MovementController.js';
 
+// Initialize modules
 const brain = new PetBrain();
 const view = new PetView();
-const physics = new PetPhysics();
-
-// Mouse tracking state
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
+const eyeController = new EyeController(
+    document.getElementById('pupil-left'),
+    document.getElementById('pupil-right'),
+    document.getElementById('pet')
+);
+const movementController = new MovementController(
+    document.getElementById('pet')
+);
 
 // === Wiring ===
 
@@ -20,10 +25,9 @@ let mouseY = window.innerHeight / 2;
 brain.on('say', (text) => view.say(text));
 brain.on('mood-change', (mood) => view.updateMood(mood));
 brain.on('blink', () => view.blink());
-brain.on('jump', () => physics.jump());
 
-// Brain -> Physics
-brain.on('wander', () => physics.setTargetRandom());
+// Brain -> Movement
+brain.on('wander', () => movementController.setRandomTarget());
 
 // View Interactions -> Brain
 view.bindEvents({
@@ -37,24 +41,14 @@ if (window.petAPI && window.petAPI.onEnvUpdate) {
     });
 }
 
-// Input -> Physics/View
-window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
-
-// === Loop ===
+// === Animation Loop ===
 
 function loop() {
-    // Update Physics
-    const pos = physics.update();
+    // Update movement
+    movementController.update();
 
-    // Update View Position
-    view.updatePosition(pos.x, pos.y);
-
-    // Update Eyes (Pupils follow mouse)
-    const pupilOffset = physics.calculatePupilOffset(mouseX, mouseY);
-    view.updatePupils(pupilOffset.x, pupilOffset.y);
+    // Update eye tracking
+    eyeController.update();
 
     requestAnimationFrame(loop);
 }

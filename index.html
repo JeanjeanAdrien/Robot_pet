@@ -21,53 +21,98 @@
             pointer-events: none;
         }
 
+        /* === Robot Body === */
         #pet {
             position: absolute;
             top: 0;
             left: 0;
-            width: 96px;
-            height: 96px;
-            border-radius: 24px;
-            background: radial-gradient(circle at 30% 20%, #fff, #aad4ff);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+            width: 110px;
+            height: 100px;
+            border-radius: 35px;
+            background: linear-gradient(145deg, #ffffff, #e6e9f0);
+            box-shadow:
+                0 10px 20px rgba(0, 0, 0, 0.1),
+                inset 0 -5px 10px rgba(0, 0, 0, 0.05),
+                0 0 15px rgba(255, 255, 255, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: auto;
             cursor: grab;
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
         }
 
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* === Ears / Antenna === */
+        .ear {
+            position: absolute;
+            top: -15px;
+            width: 20px;
+            height: 30px;
+            background: #dce1e8;
+            border-radius: 10px;
+            z-index: -1;
+            transition: transform 0.2s;
+        }
+
+        .ear.left {
+            left: 15px;
+            transform: rotate(-15deg);
+        }
+
+        .ear.right {
+            right: 15px;
+            transform: rotate(15deg);
+        }
+
+        /* === Face === */
         #face {
-            width: 70%;
+            width: 80%;
             height: 70%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
+        /* === Eyes === */
         .eyes {
             display: flex;
             width: 100%;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            padding: 0 5px;
             box-sizing: border-box;
             transition: all 0.2s ease-out;
         }
 
         .eye {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 32px;
             background: #fff;
             border-radius: 50%;
             position: relative;
             overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
         }
 
         .pupil {
-            width: 10px;
-            height: 10px;
-            background: #333;
+            width: 18px;
+            height: 18px;
+            background: #2c3e50;
             border-radius: 50%;
             position: absolute;
             top: 50%;
@@ -75,35 +120,72 @@
             transform: translate(-50%, -50%);
         }
 
-        .mouth {
-            width: 20px;
-            height: 10px;
-            background: #333;
+        /* Highlight that moves with pupil */
+        .pupil::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
             border-radius: 50%;
-            margin-top: 10px;
+        }
+
+        /* === Blush === */
+        .cheeks {
+            position: absolute;
+            top: 45px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2px;
+            pointer-events: none;
+        }
+
+        .blush {
+            width: 12px;
+            height: 6px;
+            background: #ffb7b2;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        /* === Mouth === */
+        .mouth {
+            width: 16px;
+            height: 8px;
+            background: #2c3e50;
+            border-radius: 50%;
+            margin-top: 5px;
             transition: all 0.2s;
         }
 
+        /* === Speech Bubble === */
         #speech {
             position: absolute;
-            bottom: 110%;
+            bottom: 115%;
             left: 50%;
             transform: translateX(-50%);
-            padding: 6px 10px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            font-size: 11px;
-            font-family: system-ui, sans-serif;
+            padding: 8px 12px;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            background: #fff;
+            color: #333;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            z-index: 20;
         }
 
         #speech.visible {
             opacity: 1;
-            transform: translateX(-50%) translateY(-4px);
+            transform: translateX(-50%) translateY(-5px);
         }
     </style>
 </head>
@@ -111,7 +193,11 @@
 <body>
     <div id="pet-container">
         <div id="pet">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+
             <div id="speech"></div>
+
             <div id="face">
                 <div class="eyes">
                     <div class="eye">
@@ -121,6 +207,12 @@
                         <div class="pupil" id="pupil-right"></div>
                     </div>
                 </div>
+
+                <div class="cheeks">
+                    <div class="blush"></div>
+                    <div class="blush"></div>
+                </div>
+
                 <div class="mouth" id="mouth"></div>
             </div>
         </div>

@@ -4,8 +4,6 @@ export class PetView {
             pet: document.getElementById('pet'),
             mouth: document.getElementById('mouth'),
             speech: document.getElementById('speech'),
-            pupilLeft: document.getElementById('pupil-left'),
-            pupilRight: document.getElementById('pupil-right'),
             eyesContainer: document.querySelector('.eyes')
         };
 
@@ -55,19 +53,6 @@ export class PetView {
         setTimeout(() => {
             eyesContainer.style.transform = 'scaleY(1)';
         }, 150);
-    }
-
-    updatePosition(x, y) {
-        // Center the pet on x, y
-        const width = 96;
-        const height = 96;
-        this.elements.pet.style.transform = `translate(${x - width / 2}px, ${y - height / 2}px)`;
-    }
-
-    updatePupils(dx, dy) {
-        const { pupilLeft, pupilRight } = this.elements;
-        pupilLeft.style.transform = `translate(${dx}px, ${dy}px)`;
-        pupilRight.style.transform = `translate(${dx}px, ${dy}px)`;
     }
 
     // Interaction events
